@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "246631607226",
+    "firebase_url": "https://mealtolive.firebaseio.com",
+    "project_id": "mealtolive",
+    "storage_bucket": "mealtolive.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246631607226:android:cf47deb9412a48b9",
+        "android_client_info": {
+          "package_name": "pbl.g12.sem1.mealtolive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246631607226-qhfnegfjb42474c9uigpd2l5k749btsn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pbl.g12.sem1.mealtolive",
+            "certificate_hash": "60b12473cbb96f83e9b2a33dc8615b6e41afc82b"
+          }
+        },
+        {
+          "client_id": "246631607226-9v28vpiv1eh7koholiqv02qpr421ibi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp6c4y0FxgqKtNPH0dCbKS3-gMxuPb_hI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246631607226-9v28vpiv1eh7koholiqv02qpr421ibi3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
