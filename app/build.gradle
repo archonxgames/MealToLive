@@ -5,7 +5,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "pbl.g12.sem1.mealtolive"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -27,6 +27,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
+    annotationProcessor 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton:butterknife:6.1.0'
     testCompile 'junit:junit:4.12'
 }
