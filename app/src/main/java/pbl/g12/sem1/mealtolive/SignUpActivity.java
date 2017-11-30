@@ -1,11 +1,9 @@
 package pbl.g12.sem1.mealtolive;
 
 import android.app.ProgressDialog;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +20,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SignupActivity extends AppCompatActivity
+public class SignUpActivity extends AppCompatActivity
 {
 	private static final String TAG = "SignUpActivity";
 	private FirebaseAuth mAuth;
@@ -75,7 +73,7 @@ public class SignupActivity extends AppCompatActivity
 
 		_signUpButton.setEnabled(false);
 
-		final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+		final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
 				R.style.AppTheme_Dark_Dialog);
 		progressDialog.setIndeterminate(true);
 		progressDialog.setMessage("Creating Account...");
@@ -126,7 +124,7 @@ public class SignupActivity extends AppCompatActivity
 	public void onSignUpFailed()
 	{
 		// If sign in fails, display a message to the user.
-		Toast.makeText(SignupActivity.this, "Signup failed.",
+		Toast.makeText(SignUpActivity.this, "Signup failed.",
 				Toast.LENGTH_SHORT).show();
 		// TODO: Insert UI Update if sign-up fails
 		_signUpButton.setEnabled(true);
