@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity
 			@Override
 			public void onClick(View v)
 			{
-				// Start the Signup activity
+				// Start the Sign-up activity
 				Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
 				startActivityForResult(intent, REQUEST_SIGN_UP);
 			}
@@ -72,7 +72,21 @@ public class LoginActivity extends AppCompatActivity
 		super.onStart();
 		// Check if user is signed in (non-null) and update UI accordingly.
 		FirebaseUser currentUser = mAuth.getCurrentUser();
-		// TODO: Insert UI Update if there is a user already logged in
+		if (currentUser != null) {
+			// Name, email address, and profile photo Url
+			String name = currentUser.getDisplayName();
+			String email = currentUser.getEmail();
+
+			// Check if user's email is verified
+			boolean emailVerified = currentUser.isEmailVerified();
+
+			// The user's ID, unique to the Firebase project. Do NOT use this value to
+			// authenticate with your backend server, if you have one. Use
+			// FirebaseUser.getToken() instead.
+			String uid = currentUser.getUid();
+			finish();
+			// TODO: Insert UI Update if there is a user already logged in
+		}
 	}
 
 	public void login()
@@ -114,7 +128,7 @@ public class LoginActivity extends AppCompatActivity
 						}
 
 						// [START_EXCLUDE]
-						progressDialog.hide();
+						progressDialog.dismiss();
 						// [END_EXCLUDE]
 					}
 				});
@@ -129,7 +143,7 @@ public class LoginActivity extends AppCompatActivity
 			if (resultCode == RESULT_OK)
 			{
 
-				// TODO: Implement successful signup logic here
+				// TODO: Implement successful sign-up logic here
 				// By default we just finish the Activity and log them in automatically
 				this.finish();
 			}
@@ -180,9 +194,9 @@ public class LoginActivity extends AppCompatActivity
 		} else
 			_emailText.setError(null);
 
-		if (password.isEmpty() || password.length() < 4 || password.length() > 10)
+		if (password.isEmpty())
 		{
-			_passwordText.setError("between 4 and 10 alphanumeric characters");
+			_passwordText.setError("password is incorrect");
 			valid = false;
 		} else
 			_passwordText.setError(null);

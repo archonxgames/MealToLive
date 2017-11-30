@@ -58,7 +58,7 @@
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Signup Button -->
+        <!-- Sign-up Button -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
