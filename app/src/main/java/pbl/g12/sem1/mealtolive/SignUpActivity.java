@@ -22,8 +22,8 @@ import butterknife.InjectView;
 
 public class SignUpActivity extends AppCompatActivity
 {
-	private static final String TAG = "SignUpActivity";
 	private FirebaseAuth mAuth;
+
 	@InjectView(R.id.input_name)
 	EditText _nameText;
 	@InjectView(R.id.input_email)

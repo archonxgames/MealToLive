@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,7 +24,7 @@ public class LoginActivity extends AppCompatActivity
 {
 	private FirebaseAuth mAuth;
 	private static final String TAG = "LoginActivity";
-	private static final int REQUEST_SIGN_UP = 0;
+	private static final int REQUEST_SIGNUP = 0;
 
 	@InjectView(R.id.input_email)
 	EditText _emailText;
@@ -34,7 +33,7 @@ public class LoginActivity extends AppCompatActivity
 	@InjectView(R.id.btn_login)
 	Button _loginButton;
 	@InjectView(R.id.link_signup)
-	TextView _sign_upLink;
+	TextView _signupLink;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -53,7 +52,7 @@ public class LoginActivity extends AppCompatActivity
 			}
 		});
 
-		_sign_upLink.setOnClickListener(new View.OnClickListener()
+		_signupLink.setOnClickListener(new View.OnClickListener()
 		{
 
 			@Override
@@ -61,32 +60,9 @@ public class LoginActivity extends AppCompatActivity
 			{
 				// Start the Sign-up activity
 				Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-				startActivityForResult(intent, REQUEST_SIGN_UP);
+				startActivityForResult(intent, REQUEST_SIGNUP);
 			}
 		});
-	}
-
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		// Check if user is signed in (non-null) and update UI accordingly.
-		FirebaseUser currentUser = mAuth.getCurrentUser();
-		if (currentUser != null) {
-			// Name, email address, and profile photo Url
-			String name = currentUser.getDisplayName();
-			String email = currentUser.getEmail();
-
-			// Check if user's email is verified
-			boolean emailVerified = currentUser.isEmailVerified();
-
-			// The user's ID, unique to the Firebase project. Do NOT use this value to
-			// authenticate with your backend server, if you have one. Use
-			// FirebaseUser.getToken() instead.
-			String uid = currentUser.getUid();
-			finish();
-			// TODO: Insert UI Update if there is a user already logged in
-		}
 	}
 
 	public void login()
@@ -134,22 +110,6 @@ public class LoginActivity extends AppCompatActivity
 				});
 	}
 
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		if (requestCode == REQUEST_SIGN_UP)
-		{
-			if (resultCode == RESULT_OK)
-			{
-
-				// TODO: Implement successful sign-up logic here
-				// By default we just finish the Activity and log them in automatically
-				this.finish();
-			}
-		}
-	}
-
 	@Override
 	public void onBackPressed()
 	{
@@ -160,7 +120,7 @@ public class LoginActivity extends AppCompatActivity
 	public void onLoginSuccess()
 	{
 		Log.d(TAG, "signInWithEmail:success");
-		FirebaseUser user = mAuth.getCurrentUser();
+		setResult(REQUEST_SIGNUP,getIntent());
 		finish();
 	}
 

@@ -14,4 +14,15 @@
         completions."
     </string>
     <string name="action_settings">Settings</string>
+    <string name="loginActivity.link_signup.text">No account yet? Create one</string>
+    <string name="loginActivity.input_password.hint">Password</string>
+    <string name="loginActivity.input_email.hint">Email</string>
+    <string name="loginActivity.btnLogin.text">Login</string>
+    <string name="loginActivity.logotype.contentDescription">Meal To Live Logotype</string>
+    <string name="signupActivity.input_name.hint">Name</string>
+    <string name="signupActivity.input_email.hint">Email</string>
+    <string name="signupActivity.input_password.hint">Password</string>
+    <string name="signupActivity.btn_signup.text">Create Account</string>
+    <string name="signupActivity.link_login.text">Already a member? Login</string>
+    <string name="signupActivity.logotype.contentDescription">Meal To Live Logotype</string>
 </resources>
