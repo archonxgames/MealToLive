@@ -8,13 +8,11 @@
     android:paddingRight="24dp">
 
     <ImageView
-        android:id="@+id/logotype"
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"
-        android:contentDescription="@string/loginActivity.logotype.contentDescription"
-        android:src="@drawable/logotype" />
+        android:src="@drawable/logowhite" />
 
     <!-- Email Label -->
     <android.support.design.widget.TextInputLayout
@@ -27,7 +25,7 @@
             android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/loginActivity.input_email.hint"
+            android:hint="Email"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
@@ -42,7 +40,7 @@
             android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/loginActivity.input_password.hint"
+            android:hint="Password"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +51,7 @@
         android:layout_marginBottom="24dp"
         android:layout_marginTop="24dp"
         android:padding="12dp"
-        android:text="@string/loginActivity.btnLogin.text" />
+        android:text="Login" />
 
     <TextView
         android:id="@+id/link_signup"
@@ -61,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:text="@string/loginActivity.link_signup.text"
-        android:textSize="16sp" />
+        android:text="No account yet? Create one"
+        android:textSize="16dip" />
 
 </LinearLayout>

@@ -13,14 +13,11 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView
-            android:id="@+id/logotype"
+        <ImageView android:src="@drawable/logowhite"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
-            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:contentDescription="@string/signupActivity.logotype.contentDescription"
-            android:src="@drawable/logotype" />
+            android:layout_gravity="center_horizontal" />
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
@@ -32,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="@string/signupActivity.input_name.hint" />
+                android:hint="Name" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Email Label -->
@@ -45,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="@string/signupActivity.input_email.hint" />
+                android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -58,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="@string/signupActivity.input_password.hint"/>
+                android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Sign-up Button -->
@@ -69,15 +66,15 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="@string/signupActivity.btn_signup.text"/>
+            android:text="Create Account"/>
 
         <TextView android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="@string/signupActivity.link_login.text"
+            android:text="Already a member? Login"
             android:gravity="center"
-            android:textSize="16sp"/>
+            android:textSize="16dip"/>
 
     </LinearLayout>
 </ScrollView>
