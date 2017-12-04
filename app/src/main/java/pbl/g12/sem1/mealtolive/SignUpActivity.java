@@ -22,8 +22,6 @@ import butterknife.InjectView;
 
 public class SignUpActivity extends AppCompatActivity
 {
-	private FirebaseAuth mAuth;
-
 	@InjectView(R.id.input_name)
 	EditText _nameText;
 	@InjectView(R.id.input_email)
@@ -34,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity
 	Button _signUpButton;
 	@InjectView(R.id.link_login)
 	TextView _loginLink;
+	private FirebaseAuth mAuth;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -115,7 +114,10 @@ public class SignUpActivity extends AppCompatActivity
 				.setDisplayName(name)
 				.build();
 
-		user.updateProfile(profileUpdates);
+		if (user != null)
+		{
+			user.updateProfile(profileUpdates);
+		}
 		// TODO: Insert UI Update if sign-up success
 		setResult(RESULT_OK, null);
 		finish();

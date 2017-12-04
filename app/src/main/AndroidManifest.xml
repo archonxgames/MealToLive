@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".NavDrawer"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -30,8 +30,8 @@
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".UserProfile" />
-        <activity android:name=".UserDonation" />
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".UserDonationActivity" />
     </application>
 
 </manifest>

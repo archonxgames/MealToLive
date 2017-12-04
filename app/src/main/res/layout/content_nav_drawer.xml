@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="pbl.g12.sem1.mealtolive.NavDrawer"
+    tools:context="pbl.g12.sem1.mealtolive.MainActivity"
     tools:showIn="@layout/app_bar_nav_drawer">
 
 </android.support.constraint.ConstraintLayout>
