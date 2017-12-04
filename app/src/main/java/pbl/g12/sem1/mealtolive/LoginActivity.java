@@ -12,20 +12,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class LoginActivity extends AppCompatActivity
 {
-	private FirebaseAuth mAuth;
 	private static final String TAG = "LoginActivity";
 	private static final int REQUEST_SIGNUP = 0;
-
 	@InjectView(R.id.input_email)
 	EditText _emailText;
 	@InjectView(R.id.input_password)
@@ -34,6 +38,7 @@ public class LoginActivity extends AppCompatActivity
 	Button _loginButton;
 	@InjectView(R.id.link_signup)
 	TextView _signupLink;
+	private FirebaseAuth mAuth;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -41,6 +46,13 @@ public class LoginActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		ButterKnife.inject(this);
+
+		// Configure Google Sign In
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken(getString(R.string.mealtolive_web_client_id))
+				.requestEmail()
+				.build();
+
 		mAuth = FirebaseAuth.getInstance();
 
 		_loginButton.setOnClickListener(new View.OnClickListener()
@@ -67,8 +79,6 @@ public class LoginActivity extends AppCompatActivity
 
 	public void login()
 	{
-		Log.d(TAG, "Login");
-
 		if (!validate())
 		{
 			onLoginFailed();
@@ -99,7 +109,7 @@ public class LoginActivity extends AppCompatActivity
 						} else
 						{
 							// If sign in fails, display a message to the user.
-							onLoginFailed(task);
+							onLoginFailed();
 							// TODO: Insert UI Update if login fails
 						}
 
@@ -117,26 +127,15 @@ public class LoginActivity extends AppCompatActivity
 		moveTaskToBack(true);
 	}
 
-	public void onLoginSuccess()
+	private void onLoginSuccess()
 	{
-		Log.d(TAG, "signInWithEmail:success");
 		setResult(REQUEST_SIGNUP,getIntent());
 		finish();
 	}
 
-	public void onLoginFailed(@NonNull Task<AuthResult> task)
-	{
-		Log.w(TAG, "signInWithEmail:failure", task.getException());
-		Toast.makeText(LoginActivity.this, "Authentication failed.",
-				Toast.LENGTH_SHORT).show();
-
-		_loginButton.setEnabled(true);
-	}
-
-	public void onLoginFailed()
+	private void onLoginFailed()
 	{
 		Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
 		_loginButton.setEnabled(true);
 	}
 
@@ -163,5 +162,27 @@ public class LoginActivity extends AppCompatActivity
 
 		return valid;
 	}
+
+	private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
+	{
+		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+		mAuth.signInWithCredential(credential)
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+				{
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task)
+					{
+						if (task.isSuccessful())
+						{
+							onLoginSuccess();
+						}
+						else
+						{
+							onLoginFailed();
+						}
+					}
+				});
+	}
+
 }
 
