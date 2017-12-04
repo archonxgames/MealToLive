@@ -25,4 +25,8 @@
     <string name="signupActivity.btn_signup.text">Create Account</string>
     <string name="signupActivity.link_login.text">Already a member? Login</string>
     <string name="signupActivity.logotype.contentDescription">Meal To Live Logotype</string>
+    <string name="title_activity_nav_drawer">NavDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
