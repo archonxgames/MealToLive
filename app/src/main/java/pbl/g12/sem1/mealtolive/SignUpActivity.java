@@ -16,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,9 +36,16 @@ public class SignUpActivity extends AppCompatActivity
 	TextView _loginLink;
 	private FirebaseAuth mAuth;
 
-	@Override
+    private DatabaseReference mDatabase;
+// ...
+
+
+
+    @Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_signup);
 		ButterKnife.inject(this);
@@ -101,7 +110,9 @@ public class SignUpActivity extends AppCompatActivity
 						// [END_EXCLUDE]
 					}
 				});
-	}
+        mDatabase.child("Users").child(name).setValue(name);
+
+    }
 
 
 	public void onSignUpSuccess(String name)
