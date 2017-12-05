@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity
 {
 	private static final int REQUEST_SIGNUP = 0;
 	private static final int RC_SIGN_IN = 1;
+
 	@InjectView(R.id.input_email)
 	EditText _emailText;
 	@InjectView(R.id.input_password)
@@ -146,14 +147,10 @@ public class LoginActivity extends AppCompatActivity
 						if (task.isSuccessful())
 						{
 							onLoginSuccess();
-							// Sign in success, update UI with the signed-in user's information
-							// TODO: Insert UI Update if login success
 						}
 						else
 						{
-							// If sign in fails, display a message to the user.
 							onLoginFailed();
-							// TODO: Insert UI Update if login fails
 						}
 
 						// [START_EXCLUDE]
@@ -172,7 +169,7 @@ public class LoginActivity extends AppCompatActivity
 
 	private void onLoginSuccess()
 	{
-		setResult(REQUEST_SIGNUP, getIntent());
+		setResult(RC_SIGN_IN, getIntent());
 		finish();
 	}
 
@@ -210,6 +207,11 @@ public class LoginActivity extends AppCompatActivity
 
 	private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
 	{
+		final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setMessage("Authenticating...");
+		progressDialog.show();
+
 		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 		mAuth.signInWithCredential(credential)
 				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()

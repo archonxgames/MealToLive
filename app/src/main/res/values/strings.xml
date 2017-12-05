@@ -30,4 +30,7 @@
 
     <string name="logotypeDescription">Meal To Live Logotype</string>
     <string name="mealtolive_web_client_id" tools:ignore="TypographyDashes">246631607226-9v28vpiv1eh7koholiqv02qpr421ibi3.apps.googleusercontent.com</string>
+    <string name="placeholder.name">firstName lastName</string>
+    <string name="placeholder.email">android.studio@domain.com</string>
+    <string name="mainActivity.profilePicture.contentDescription">User profile picture</string>
 </resources>

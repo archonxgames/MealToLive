@@ -34,12 +34,9 @@ public class SignUpActivity extends AppCompatActivity
 	Button _signUpButton;
 	@InjectView(R.id.link_login)
 	TextView _loginLink;
+
 	private FirebaseAuth mAuth;
-
     private DatabaseReference mDatabase;
-// ...
-
-
 
     @Override
 	public void onCreate(Bundle savedInstanceState)

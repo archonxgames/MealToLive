@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,26 +20,17 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener
 {
-	private static final int REQUEST_SIGN_UP = 0;
+	private static final int RC_SIGN_IN = 1;
+	private FirebaseAuth mAuth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-
-
-		FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nav_drawer);
+		mAuth = FirebaseAuth.getInstance();
 
-		FirebaseUser currentUser = mAuth.getCurrentUser();
-
-		if (currentUser == null)
-		{
-			Intent intent = new Intent(this, LoginActivity.class);
-			startActivityForResult(intent, REQUEST_SIGN_UP);
-		}
-
+		setContentView(R.layout.activity_nav_drawer);
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
@@ -52,13 +45,28 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
+	public void onStart()
+	{
+		super.onStart();
+		// Check if user is signed in (non-null) and update UI accordingly.
+		FirebaseUser currentUser = mAuth.getCurrentUser();
+		if (currentUser != null)
+			updateUI(currentUser);
+		else
+		{
+			onSignOut();
+		}
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == REQUEST_SIGN_UP)
+		if (requestCode == RC_SIGN_IN)
 		{
 			if (resultCode == RESULT_OK)
 			{
-				// TODO: Implement successful sign-up logic here
+				FirebaseUser user = mAuth.getCurrentUser();
+				updateUI(user);
 			}
 		}
 	}
@@ -70,7 +78,8 @@ public class MainActivity extends AppCompatActivity
 		if (drawer.isDrawerOpen(GravityCompat.START))
 		{
 			drawer.closeDrawer(GravityCompat.START);
-		} else
+		}
+		else
 		{
 			super.onBackPressed();
 		}
@@ -111,25 +120,47 @@ public class MainActivity extends AppCompatActivity
 		if (id == R.id.nav_camera)
 		{
 			// Handle the camera action
-		} else if (id == R.id.nav_gallery)
+		}
+		else if (id == R.id.nav_gallery)
 		{
 
-		} else if (id == R.id.nav_slideshow)
+		}
+		else if (id == R.id.nav_slideshow)
 		{
 
-		} else if (id == R.id.nav_manage)
+		}
+		else if (id == R.id.nav_manage)
 		{
 
-		} else if (id == R.id.nav_share)
+		}
+		else if (id == R.id.nav_share)
 		{
 
-		} else if (id == R.id.nav_send)
+		}
+		else if (id == R.id.nav_logout)
 		{
-
+			mAuth.signOut();
+			onSignOut();
 		}
 
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	private void onSignOut()
+	{
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivityForResult(intent, RC_SIGN_IN);
+	}
+
+	private void updateUI(FirebaseUser user)
+	{
+		NavigationView navigationView = findViewById(R.id.nav_view);
+		View headerView = navigationView.getHeaderView(0);
+		TextView _name = headerView.findViewById(R.id.nav_name);
+		TextView _email = headerView.findViewById(R.id.nav_email);
+		_name.setText(user.getDisplayName());
+		_email.setText(user.getEmail());
 	}
 }
