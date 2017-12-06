@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -26,12 +27,18 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".SignUpActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".UserProfileActivity" />
-        <activity android:name=".UserDonationActivity" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserDonationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

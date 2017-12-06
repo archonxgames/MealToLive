@@ -60,12 +60,14 @@ public class LoginActivity extends AppCompatActivity
 				.build();
 
 		googleSignInClient = GoogleSignIn.getClient(this, gso);
+		googleSignInClient.signOut();
 		//[END Google SignIn Init]
 
 		//[START Init_auth]
 		mAuth = FirebaseAuth.getInstance();
 		//[END Init_auth]
 
+		//[START Login_button_click]
 		_loginButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -74,10 +76,11 @@ public class LoginActivity extends AppCompatActivity
 				login();
 			}
 		});
+		//[END Login_button_click]
 
+		//[START Signup_link_click]
 		_signupLink.setOnClickListener(new View.OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
@@ -86,7 +89,9 @@ public class LoginActivity extends AppCompatActivity
 				startActivityForResult(intent, REQUEST_SIGNUP);
 			}
 		});
+		//[END Signup_link_click]
 
+		//[START Google_login_button_click]
 		_googleLoginButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -96,6 +101,7 @@ public class LoginActivity extends AppCompatActivity
 				startActivityForResult(signInIntent, RC_SIGN_IN);
 			}
 		});
+		//[END Google_login_button_click]
 	}
 
 	@Override
@@ -120,6 +126,26 @@ public class LoginActivity extends AppCompatActivity
 		}
 	}
 
+	@Override
+	public void onBackPressed()
+	{
+		// disable going back to the MainActivity
+		moveTaskToBack(true);
+	}
+
+	private void onLoginSuccess()
+	{
+		setResult(RC_SIGN_IN, getIntent());
+		finish();
+	}
+
+	private void onLoginFailed()
+	{
+		Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+		_loginButton.setEnabled(true);
+		_googleLoginButton.setEnabled(true);
+	}
+
 	public void login()
 	{
 		if (!validate())
@@ -129,9 +155,11 @@ public class LoginActivity extends AppCompatActivity
 		}
 
 		_loginButton.setEnabled(false);
+		_googleLoginButton.setEnabled(false);
 
 		final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
 		progressDialog.setIndeterminate(true);
+		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setMessage("Authenticating...");
 		progressDialog.show();
 
@@ -158,25 +186,6 @@ public class LoginActivity extends AppCompatActivity
 						// [END_EXCLUDE]
 					}
 				});
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		// disable going back to the MainActivity
-		moveTaskToBack(true);
-	}
-
-	private void onLoginSuccess()
-	{
-		setResult(RC_SIGN_IN, getIntent());
-		finish();
-	}
-
-	private void onLoginFailed()
-	{
-		Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-		_loginButton.setEnabled(true);
 	}
 
 	public boolean validate()
@@ -207,11 +216,6 @@ public class LoginActivity extends AppCompatActivity
 
 	private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
 	{
-		final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setMessage("Authenticating...");
-		progressDialog.show();
-
 		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 		mAuth.signInWithCredential(credential)
 				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
@@ -220,16 +224,11 @@ public class LoginActivity extends AppCompatActivity
 					public void onComplete(@NonNull Task<AuthResult> task)
 					{
 						if (task.isSuccessful())
-						{
 							onLoginSuccess();
-						}
 						else
-						{
 							onLoginFailed();
-						}
 					}
 				});
 	}
-
 }
 
