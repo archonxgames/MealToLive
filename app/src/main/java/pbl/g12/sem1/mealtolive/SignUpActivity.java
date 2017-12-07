@@ -127,6 +127,7 @@ public class SignUpActivity extends AppCompatActivity
         final String userID = user.getUid();
         mDatabase.child("Users").child(userID).child("Username").setValue(name);
         mDatabase.child("Users").child(userID).child("AccountType").setValue("Null");
+        mDatabase.child("Users").child(userID).child("ContactNumber").setValue("Null");
 		if (user != null)
 		{
 			user.updateProfile(profileUpdates);
