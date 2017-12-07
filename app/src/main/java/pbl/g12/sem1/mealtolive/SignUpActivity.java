@@ -97,7 +97,6 @@ public class SignUpActivity extends AppCompatActivity
 						if (task.isSuccessful())
 						{
 							onSignUpSuccess(name);
-                            mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Username").setValue(name);
 						} else
 						{
 							onSignUpFailed();
@@ -111,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity
 		//[OLD]
 		// mDatabase.child("Users").child(name).setValue(name);
 		//[/OLD]
-        mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        //mDatabase.child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
     }
 
@@ -125,7 +124,9 @@ public class SignUpActivity extends AppCompatActivity
 		UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 				.setDisplayName(name)
 				.build();
-
+        final String userID = user.getUid();
+        mDatabase.child("Users").child(userID).child("Username").setValue(name);
+        mDatabase.child("Users").child(userID).child("AccountType").setValue("Null");
 		if (user != null)
 		{
 			user.updateProfile(profileUpdates);
