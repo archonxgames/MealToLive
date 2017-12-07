@@ -1,68 +1,85 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingTop="13dp">
-
-    <ImageView
-        android:id="@+id/logotype"
-        android:layout_width="381dp"
-        android:layout_height="193dp"
-        android:layout_gravity="center_horizontal"
-
-        android:contentDescription="@string/logotypeDescription"
-        android:src="@drawable/logowhite" />
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="56dp"
+    tools:context="pbl.g12.sem1.mealtolive.LoginActivity">
 
     <!-- Email Label -->
+
+    <!-- Password Label -->
+    <ImageView
+        android:id="@+id/logotype"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginBottom="75dp"
+        android:contentDescription="@string/logotypeDescription"
+        android:src="@drawable/logotype_white" />
+
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/emailInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/input_email"
+        <AutoCompleteTextView
+            android:id="@+id/login_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/loginActivity.input_email.hint"
-            android:inputType="textEmailAddress" />
+            android:layout_weight="1"
+            android:hint="@string/loginActivity.login_input_email.hint"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
-    <!-- Password Label -->
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/passInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp">
 
         <EditText
-            android:id="@+id/input_password"
+            android:id="@+id/login_input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/loginActivity.input_password.hint"
-            android:inputType="textPassword" />
+            android:layout_weight="1"
+            android:hint="@string/loginActivity.login_input_password.hint"
+            android:imeActionId="6"
+            android:imeActionLabel="@string/loginActivity.login_input_password.hint"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
+    <!-- Logotype -->
+
+    <!-- Email Login Button -->
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_login"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="24dp"
-        android:padding="8dp"
-        android:text="@string/loginActivity.btnLogin.text" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/btn_google_sign_in"
+        android:id="@+id/btn_email_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="130dp"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:text="@string/loginActivity.btnLogin.text" />
+
+    <!-- Google Login Button -->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btn_google_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_layout_height"
+        android:layout_marginBottom="160dp"
         app:buttonSize="wide"
         app:colorScheme="dark" />
 
+    <!-- Signup Label -->
     <TextView
         android:id="@+id/link_signup"
         android:layout_width="fill_parent"
@@ -70,4 +87,5 @@
         android:gravity="center"
         android:text="@string/loginActivity.link_signup.text"
         android:textSize="16sp" />
+
 </LinearLayout>

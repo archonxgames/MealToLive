@@ -1,12 +1,31 @@
 package pbl.g12.sem1.mealtolive;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
+import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,36 +43,109 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import java.util.ArrayList;
+import java.util.List;
 
-public class LoginActivity extends AppCompatActivity
+import static android.Manifest.permission.READ_CONTACTS;
+
+/**
+ * A login screen that offers login via email/password.
+ */
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>
 {
-	private static final int REQUEST_SIGNUP = 0;
-	private static final int RC_SIGN_IN = 1;
+	/**
+	 * Id to identity READ_CONTACTS permission request.
+	 */
+	private static final int REQUEST_READ_CONTACTS = 0;
+	private static final int RC_LOGIN = 1;
+	private static final int REQUEST_SIGNUP = 2;
 
-	@InjectView(R.id.input_email)
-	EditText _emailText;
-	@InjectView(R.id.input_password)
-	EditText _passwordText;
-	@InjectView(R.id.btn_login)
-	Button _loginButton;
-	@InjectView(R.id.btn_google_sign_in)
-	SignInButton _googleLoginButton;
-	@InjectView(R.id.link_signup)
-	TextView _signupLink;
+	/**
+	 * Keep track of the login task to ensure we can cancel it if requested.
+	 */
+	private FirebaseAuth mAuth = null;
+	private GoogleSignInClient googleSignInClient = null;
 
-	private FirebaseAuth mAuth;
-	private GoogleSignInClient googleSignInClient;
+	// UI references.
+	private AutoCompleteTextView emailTextView;
+	private EditText passwordTextView;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		ButterKnife.inject(this);
+		// Set up the login form.
+		emailTextView = findViewById(R.id.login_input_email);
+		populateAutoComplete();
+		emailTextView.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
+			{
+				if (id == EditorInfo.IME_ACTION_NEXT || id == EditorInfo.IME_NULL)
+				{
+					passwordTextView.requestFocus();
+					return true;
+				}
+				return false;
+			}
+		});
+		passwordTextView = findViewById(R.id.login_input_password);
+		passwordTextView.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
+			{
+				if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL)
+				{
+					attemptEmailLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
-		//[START Google SignIn Init]
+		//[START Init_email_login_button]
+		AppCompatButton _emailLoginButton = findViewById(R.id.btn_email_login);
+		_emailLoginButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				attemptEmailLogin();
+			}
+		});
+		//[END Init_email_login_button]
+
+		//[START Init_google_login_button]
+		SignInButton _googleLoginButton = findViewById(R.id.btn_google_login);
+		_googleLoginButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Intent signInIntent = googleSignInClient.getSignInIntent();
+				startActivityForResult(signInIntent, RC_LOGIN);
+			}
+		});
+		//[END Init_google_login_button]
+
+		//[START Init_signup_link]
+		TextView _signupLink = findViewById(R.id.link_signup);
+		_signupLink.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				// Start the Sign-up activity
+				Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+				startActivityForResult(intent, REQUEST_SIGNUP);
+			}
+		});
+		//[END Init_signup_link]
+
+		//[START Init_auth]
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestIdToken(getString(R.string.mealtolive_web_client_id))
 				.requestEmail()
@@ -61,160 +153,152 @@ public class LoginActivity extends AppCompatActivity
 
 		googleSignInClient = GoogleSignIn.getClient(this, gso);
 		googleSignInClient.signOut();
-		//[END Google SignIn Init]
-
-		//[START Init_auth]
 		mAuth = FirebaseAuth.getInstance();
 		//[END Init_auth]
-
-		//[START Login_button_click]
-		_loginButton.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				login();
-			}
-		});
-		//[END Login_button_click]
-
-		//[START Signup_link_click]
-		_signupLink.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				// Start the Sign-up activity
-				Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-				startActivityForResult(intent, REQUEST_SIGNUP);
-			}
-		});
-		//[END Signup_link_click]
-
-		//[START Google_login_button_click]
-		_googleLoginButton.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				Intent signInIntent = googleSignInClient.getSignInIntent();
-				startActivityForResult(signInIntent, RC_SIGN_IN);
-			}
-		});
-		//[END Google_login_button_click]
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	private void populateAutoComplete()
 	{
-		super.onActivityResult(requestCode, resultCode, data);
-
-		// Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-		if (requestCode == RC_SIGN_IN)
+		if (!mayRequestContacts())
 		{
-			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-			try
+			return;
+		}
+
+		getLoaderManager().initLoader(0, null, this);
+	}
+
+	private boolean mayRequestContacts()
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+		{
+			return true;
+		}
+		if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
+		{
+			return true;
+		}
+		if (shouldShowRequestPermissionRationale(READ_CONTACTS))
+		{
+			Snackbar.make(emailTextView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+					.setAction(android.R.string.ok, new View.OnClickListener()
+					{
+						@Override
+						@TargetApi(Build.VERSION_CODES.M)
+						public void onClick(View v)
+						{
+							requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+						}
+					});
+		}
+		else
+		{
+			requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+		}
+		return false;
+	}
+
+	/**
+	 * Callback received when a permissions request has been completed.
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+	                                       @NonNull int[] grantResults)
+	{
+		if (requestCode == REQUEST_READ_CONTACTS)
+		{
+			if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 			{
-				// Google Sign In was successful, authenticate with Firebase
-				GoogleSignInAccount account = task.getResult(ApiException.class);
-				firebaseAuthWithGoogle(account);
-			}
-			catch (ApiException e)
-			{
-				onLoginFailed();
+				populateAutoComplete();
 			}
 		}
 	}
 
-	@Override
-	public void onBackPressed()
-	{
-		// disable going back to the MainActivity
-		moveTaskToBack(true);
-	}
-
 	private void onLoginSuccess()
 	{
-		setResult(RC_SIGN_IN, getIntent());
+		setResult(RC_LOGIN, getIntent());
 		finish();
 	}
 
 	private void onLoginFailed()
 	{
-		Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-		_loginButton.setEnabled(true);
-		_googleLoginButton.setEnabled(true);
+		Toast.makeText(getBaseContext(), "Authentication failed.", Toast.LENGTH_LONG).show();
 	}
 
-	public void login()
+	/**
+	 * Attempts to sign in or register the account specified by the login form.
+	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * errors are presented and no actual login attempt is made.
+	 */
+	private void attemptEmailLogin()
 	{
-		if (!validate())
+		// Reset errors.
+		emailTextView.setError(null);
+		passwordTextView.setError(null);
+
+		// Store values at the time of the login attempt.
+		String email = emailTextView.getText().toString();
+		String password = passwordTextView.getText().toString();
+
+		boolean cancel = false;
+		View focusView = null;
+
+		// Check for a valid email address.
+		if (TextUtils.isEmpty(email))
 		{
-			onLoginFailed();
-			return;
+			emailTextView.setError(getString(R.string.error_field_required));
+			focusView = emailTextView;
+			cancel = true;
+		}
+		else if (!isEmailValid(email))
+		{
+			emailTextView.setError(getString(R.string.error_invalid_email));
+			focusView = emailTextView;
+			cancel = true;
 		}
 
-		_loginButton.setEnabled(false);
-		_googleLoginButton.setEnabled(false);
+		// Check for a valid password
+		if (TextUtils.isEmpty(password))
+		{
+			passwordTextView.setError(getString(R.string.error_field_required));
+			focusView = passwordTextView;
+			cancel = true;
+		}
 
-		final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setMessage("Authenticating...");
-		progressDialog.show();
-
-		String email = _emailText.getText().toString();
-		String password = _passwordText.getText().toString();
-
-		mAuth.signInWithEmailAndPassword(email, password)
-				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-				{
-					@Override
-					public void onComplete(@NonNull Task<AuthResult> task)
+		if (cancel)
+		{
+			// There was an error; don't attempt login and focus the first
+			// form field with an error.
+			focusView.requestFocus();
+		}
+		else
+		{
+			//[START Init_progress_dialog]
+			ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setMessage("Authenticating...");
+			progressDialog.show();
+			//[END Init_progress_dialog]
+			mAuth.signInWithEmailAndPassword(email, password)
+					.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
 					{
-						if (task.isSuccessful())
+						@Override
+						public void onComplete(@NonNull Task<AuthResult> task)
 						{
-							onLoginSuccess();
+							if (task.isSuccessful())
+							{
+								onLoginSuccess();
+							}
+							else
+							{
+								onLoginFailed();
+							}
 						}
-						else
-						{
-							onLoginFailed();
-						}
-
-						// [START_EXCLUDE]
-						progressDialog.dismiss();
-						// [END_EXCLUDE]
-					}
-				});
+					});
+		}
 	}
 
-	public boolean validate()
-	{
-		boolean valid = true;
-
-		String email = _emailText.getText().toString();
-		String password = _passwordText.getText().toString();
-
-		if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
-		{
-			_emailText.setError("enter a valid email address");
-			valid = false;
-		}
-		else
-			_emailText.setError(null);
-
-		if (password.isEmpty())
-		{
-			_passwordText.setError("password is incorrect");
-			valid = false;
-		}
-		else
-			_passwordText.setError(null);
-
-		return valid;
-	}
-
-	private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
+	private void attemptGoogleLogin(GoogleSignInAccount acct)
 	{
 		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 		mAuth.signInWithCredential(credential)
@@ -224,11 +308,102 @@ public class LoginActivity extends AppCompatActivity
 					public void onComplete(@NonNull Task<AuthResult> task)
 					{
 						if (task.isSuccessful())
+						{
 							onLoginSuccess();
-						else
-							onLoginFailed();
+						}
 					}
 				});
 	}
-}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+
+		// Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+		if (requestCode == RC_LOGIN)
+		{
+			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+			try
+			{
+				// Google Sign In was successful, authenticate with Firebase
+				GoogleSignInAccount account = task.getResult(ApiException.class);
+				attemptGoogleLogin(account);
+			}
+			catch (ApiException e)
+			{
+				switch (e.getMessage())
+				{
+					case "12501: ":
+						break;
+					default:
+						Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+	}
+
+	private boolean isEmailValid(String email)
+	{
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int i, Bundle bundle)
+	{
+		return new CursorLoader(this,
+				// Retrieve data rows for the device user's 'profile' contact.
+				Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
+						ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+
+				// Select only email addresses.
+				ContactsContract.Contacts.Data.MIMETYPE +
+						" = ?", new String[]{ContactsContract.CommonDataKinds.Email
+				.CONTENT_ITEM_TYPE},
+
+				// Show primary email addresses first. Note that there won't be
+				// a primary email address if the user hasn't specified one.
+				ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor)
+	{
+		List<String> emails = new ArrayList<>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast())
+		{
+			emails.add(cursor.getString(ProfileQuery.ADDRESS));
+			cursor.moveToNext();
+		}
+
+		addEmailsToAutoComplete(emails);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> cursorLoader)
+	{
+
+	}
+
+	private void addEmailsToAutoComplete(List<String> emailAddressCollection)
+	{
+		//Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+		ArrayAdapter<String> adapter =
+				new ArrayAdapter<>(LoginActivity.this,
+						android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+		emailTextView.setAdapter(adapter);
+	}
+
+
+	private interface ProfileQuery
+	{
+		String[] PROJECTION = {
+				ContactsContract.CommonDataKinds.Email.ADDRESS,
+				ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
+		};
+
+		int ADDRESS = 0;
+	}
+}

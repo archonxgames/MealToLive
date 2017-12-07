@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener
 {
-	private static final int RC_SIGN_IN = 1;
+	private static final int RC_LOGIN = 1;
 	private FirebaseAuth mAuth;
 
 	@Override
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == RC_SIGN_IN)
+		if (requestCode == RC_LOGIN)
 		{
 			if (resultCode == RESULT_OK)
 			{
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity
 	private void onSignOut()
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
-		startActivityForResult(intent, RC_SIGN_IN);
+		startActivityForResult(intent, RC_LOGIN);
 	}
 
 	private void updateUI(FirebaseUser user)
