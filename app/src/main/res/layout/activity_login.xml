@@ -75,7 +75,7 @@
         android:id="@+id/btn_google_login"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_layout_height"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="80dp"
         app:buttonSize="wide"
         app:colorScheme="dark" />
 

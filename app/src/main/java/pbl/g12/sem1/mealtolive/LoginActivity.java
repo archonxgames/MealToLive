@@ -213,6 +213,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 		}
 	}
 
+	@Override
+	public void onBackPressed()
+	{
+		// disable going back to the MainActivity
+		moveTaskToBack(true);
+	}
+
 	private void onLoginSuccess()
 	{
 		setResult(RC_LOGIN, getIntent());
