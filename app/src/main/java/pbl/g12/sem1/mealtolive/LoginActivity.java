@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 		});
 
 		//[START Init_email_login_button]
-		AppCompatButton _emailLoginButton = findViewById(R.id.btn_email_login);
+		AppCompatButton _emailLoginButton = findViewById(R.id.email_login_button);
 		_emailLoginButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 		//[END Init_email_login_button]
 
 		//[START Init_google_login_button]
-		SignInButton _googleLoginButton = findViewById(R.id.btn_google_login);
+		SignInButton _googleLoginButton = findViewById(R.id.google_login_button);
 		_googleLoginButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			public void onClick(View view)
 			{
 				// Start the Sign-up activity
-				Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+				Intent intent = new Intent(getApplicationContext(), SignupNavActivity.class);
 				startActivityForResult(intent, REQUEST_SIGNUP);
 			}
 		});

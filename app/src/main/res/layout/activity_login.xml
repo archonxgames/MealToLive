@@ -1,91 +1,87 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="56dp"
-    tools:context="pbl.g12.sem1.mealtolive.LoginActivity">
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	android:orientation = "vertical"
+	android:paddingLeft = "@dimen/activity_horizontal_margin"
+	android:paddingRight = "@dimen/activity_horizontal_margin"
+	android:paddingTop = "56dp"
+	tools:context = "pbl.g12.sem1.mealtolive.LoginActivity">
 
-    <!-- Email Label -->
+	<!-- Logotype -->
+	<ImageView
+		android:id = "@+id/logotype"
+		android:layout_width = "match_parent"
+		android:layout_height = "72dp"
+		android:layout_marginBottom = "75dp"
+		android:contentDescription = "@string/logotypeDescription"
+		android:src = "@drawable/logotype_white" />
 
-    <!-- Password Label -->
-    <ImageView
-        android:id="@+id/logotype"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_marginBottom="75dp"
-        android:contentDescription="@string/logotypeDescription"
-        android:src="@drawable/logotype_white" />
+	<!-- Email Label -->
+	<android.support.design.widget.TextInputLayout
+		android:id = "@+id/emailInputLayout"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/emailInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+		<AutoCompleteTextView
+			android:id = "@+id/login_input_email"
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:layout_weight = "1"
+			android:hint = "@string/prompt_email"
+			android:inputType = "textEmailAddress"
+			android:maxLines = "1"
+			android:singleLine = "true" />
+	</android.support.design.widget.TextInputLayout>
 
-        <AutoCompleteTextView
-            android:id="@+id/login_input_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/loginActivity.login_input_email.hint"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+	<!-- Password Label -->
+	<android.support.design.widget.TextInputLayout
+		android:id = "@+id/passInputLayout"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_marginBottom = "8dp"
+		android:layout_marginTop = "8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/passInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+		<EditText
+			android:id = "@+id/login_input_password"
+			android:layout_width = "match_parent"
+			android:layout_height = "wrap_content"
+			android:layout_weight = "1"
+			android:hint = "@string/prompt_password"
+			android:imeActionId = "6"
+			android:imeActionLabel = "@string/prompt_password"
+			android:imeOptions = "actionUnspecified"
+			android:inputType = "textPassword"
+			android:maxLines = "1"
+			android:singleLine = "true" />
+	</android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/login_input_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/loginActivity.login_input_password.hint"
-            android:imeActionId="6"
-            android:imeActionLabel="@string/loginActivity.login_input_password.hint"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+	<!-- Email Login Button -->
+	<android.support.v7.widget.AppCompatButton
+		android:id = "@+id/email_login_button"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:layout_marginTop = "24dp"
+		android:padding = "12dp"
+		android:text = "@string/login_button_text" />
 
-    <!-- Logotype -->
+	<!-- Google Login Button -->
+	<com.google.android.gms.common.SignInButton
+		android:id = "@+id/google_login_button"
+		android:layout_width = "match_parent"
+		android:layout_height = "@dimen/button_layout_height"
+		android:layout_marginBottom = "80dp"
+		app:buttonSize = "wide"
+		app:colorScheme = "dark" />
 
-    <!-- Email Login Button -->
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_email_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:text="@string/loginActivity.btnLogin.text" />
-
-    <!-- Google Login Button -->
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/btn_google_login"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_layout_height"
-        android:layout_marginBottom="80dp"
-        app:buttonSize="wide"
-        app:colorScheme="dark" />
-
-    <!-- Signup Label -->
-    <TextView
-        android:id="@+id/link_signup"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/loginActivity.link_signup.text"
-        android:textSize="16sp" />
-
+	<!-- Signup Label -->
+	<TextView
+		android:id = "@+id/link_signup"
+		android:layout_width = "fill_parent"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:text = "@string/signup_link_label"
+		android:textSize = "16sp" />
 </LinearLayout>
