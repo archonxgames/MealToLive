@@ -1,7 +1,7 @@
 package pbl.g12.sem1.mealtolive;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -12,13 +12,13 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +28,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +49,18 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class SignupPersonalActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>
 {
-
+	private static final int RC_LOGIN = 1;
 	/**
 	 * Id to identity READ_CONTACTS permission request.
 	 */
 	private static final int REQUEST_READ_CONTACTS = 0;
-
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private UserSignupTask mAuthTask = null;
-
+	private FirebaseAuth mAuth;
+	private DatabaseReference mDatabase;
 	// UI references.
 	private AutoCompleteTextView mNameView;
 	private AutoCompleteTextView mEmailView;
 	private EditText mPasswordView;
+	private Button _signupButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -100,23 +107,37 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 			{
 				if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL)
 				{
-					attemptLogin();
+					attemptSignup();
 					return true;
 				}
 				return false;
 			}
 		});
 
-		Button _signupButton = findViewById(R.id.p_signup_button);
+		_signupButton = findViewById(R.id.p_signup_button);
 		_signupButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				attemptLogin();
+				attemptSignup();
 			}
 		});
 
+		TextView _loginLink = findViewById(R.id.link_login);
+		_loginLink.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				// Finish the registration screen and return to the Login activity
+				setResult(RC_LOGIN, null);
+				finish();
+			}
+		});
+
+		mDatabase = FirebaseDatabase.getInstance().getReference();
+		mAuth = FirebaseAuth.getInstance();
 	}
 
 	private void populateAutoComplete()
@@ -192,19 +213,16 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
-	private void attemptLogin()
+	private void attemptSignup()
 	{
-		if (mAuthTask != null)
-		{
-			return;
-		}
-
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView.setError(null);
 
+		_signupButton.setEnabled(false);
+
 		// Store values at the time of the login attempt.
-		String displayName = mNameView.getText().toString();
+		final String displayName = mNameView.getText().toString();
 		String email = mEmailView.getText().toString();
 		String password = mPasswordView.getText().toString();
 
@@ -212,7 +230,13 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		View focusView = null;
 
 		// Check for a valid password, if the user entered one.
-		if (!TextUtils.isEmpty(password) && !isPasswordValid(password))
+		if (TextUtils.isEmpty(password))
+		{
+			mPasswordView.setError(getString(R.string.error_field_required));
+			focusView = mPasswordView;
+			cancel = true;
+		}
+		else if (!isPasswordValid(password))
 		{
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
@@ -226,10 +250,24 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 			focusView = mEmailView;
 			cancel = true;
 		}
-		else if (!isEmailValid(email))
+		else if (!isEmailFormatValid(email))
 		{
 			mEmailView.setError(getString(R.string.error_invalid_email));
 			focusView = mEmailView;
+			cancel = true;
+		}
+		else if (!isEmailDomainExisting(email))
+		{
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
+		}
+
+		//Check for a valid display name
+		if (displayName.isEmpty())
+		{
+			mNameView.setError(getString(R.string.error_field_required));
+			focusView = mNameView;
 			cancel = true;
 		}
 
@@ -241,23 +279,79 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		}
 		else
 		{
-			// kick off a background task to perform the user signup attempt.
-			//TODO: Show progress here
-			mAuthTask = new UserSignupTask(displayName, email, password);
-			mAuthTask.execute((Void) null);
+			//[START init_progress_dialog]
+			final ProgressDialog progressDialog = new ProgressDialog(SignupPersonalActivity.this,
+					R.style.AppTheme_Dark_Dialog);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setMessage("Creating Account...");
+			progressDialog.show();
+			//[END init_progress_dialog]
+			mAuth.createUserWithEmailAndPassword(email, password)
+					.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+					{
+						@Override
+						public void onComplete(@NonNull Task<AuthResult> task)
+						{
+							if (task.isSuccessful())
+							{
+								onSignUpSuccess(displayName);
+							}
+							else
+							{
+								onSignUpFailed();
+							}
+
+							// [START_EXCLUDE]
+							progressDialog.dismiss();
+							// [END_EXCLUDE]
+						}
+					});
 		}
 	}
 
-	private boolean isEmailValid(String email)
+	private void onSignUpFailed()
 	{
-		//TODO: Replace this with your own logic
-		return email.contains("@");
+		// If sign in fails, display a message to the user.
+		Toast.makeText(SignupPersonalActivity.this, "Signup failed.",
+				Toast.LENGTH_SHORT).show();
+		_signupButton.setEnabled(true);
+	}
+
+	private void onSignUpSuccess(String displayName)
+	{
+		_signupButton.setEnabled(true);
+		// Sign in success, update UI with the signed-in user's information
+		FirebaseUser user = mAuth.getCurrentUser();
+
+		UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+				.setDisplayName(displayName)
+				.build();
+		final String userID = user.getUid();
+		mDatabase.child("Users").child(userID).child("Username").setValue(displayName);
+		mDatabase.child("Users").child(userID).child("AccountType").setValue("Null");
+		if (user != null)
+		{
+			user.updateProfile(profileUpdates);
+		}
+		setResult(RESULT_OK, null);
+		finish();
+	}
+
+	private boolean isEmailFormatValid(String email)
+	{
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+	}
+
+	private boolean isEmailDomainExisting(String email)
+	{
+		String domain = email.split("@")[1];
+		//TODO: Insert domain check
+		return true;
 	}
 
 	private boolean isPasswordValid(String password)
 	{
-		//TODO: Replace this with your own logic
-		return password.length() < 6;
+		return password.length() >= 6;
 	}
 
 	@Override
@@ -332,68 +426,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 
 		int DISPLAY_NAME_PRIMARY = 0;
 		int ADDRESS = 1;
-	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	@SuppressLint("StaticFieldLeak")
-	public class UserSignupTask extends AsyncTask<Void, Void, Boolean>
-	{
-		private final String mName;
-		private final String mEmail;
-		private final String mPassword;
-
-		UserSignupTask(String displayName, String email, String password)
-		{
-			mName = displayName;
-			mEmail = email;
-			mPassword = password;
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... params)
-		{
-			// TODO: attempt authentication against a network service.
-
-			try
-			{
-				// Simulate network access.
-				Thread.sleep(2000);
-			}
-			catch (InterruptedException e)
-			{
-				return false;
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success)
-		{
-			mAuthTask = null;
-			//TODO: Stop showing progress here
-
-			if (success)
-			{
-				finish();
-			}
-			else
-			{
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled()
-		{
-			mAuthTask = null;
-			//TODO: Stop showing progress here
-		}
 	}
 }
 
