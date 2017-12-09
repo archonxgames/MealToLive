@@ -1,8 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:tools = "http://schemas.android.com/tools"
+	<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
+	android:layout_marginTop="35dp"
 	tools:context = "pbl.g12.sem1.mealtolive.UserDonationActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<ImageView
+				android:id="@+id/imageView4"
+				android:layout_width="200dp"
+				android:layout_height="200dp"
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true"
+				android:layout_weight="1"
+				app:srcCompat="@drawable/logotype_white" />
+
+			<ImageView
+				android:id="@+id/imageView3"
+				android:layout_width="550dp"
+				android:layout_height="550dp"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentTop="true"
+				android:layout_marginTop="160dp"
+				android:layout_weight="1"
+				app:srcCompat="@drawable/box" />
+
+			<TextView
+				android:id="@+id/textView3"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@+id/imageView3"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="45dp"
+				android:fontFamily="@font/roboto_thin"
+				android:text="Please choose an amount to donate"
+				android:textColor="@color/black"
+				android:textSize="20sp" />
+
+			<Button
+				android:id="@+id/button23"
+				android:layout_width="130dp"
+				android:layout_height="50dp"
+				android:layout_alignStart="@+id/textView3"
+				android:layout_below="@+id/textView3"
+				android:layout_marginStart="23dp"
+				android:layout_marginTop="18dp"
+				android:text="50 PESOS" />
+
+			<Button
+				android:id="@+id/button25"
+				android:layout_width="130dp"
+				android:layout_height="50dp"
+				android:layout_alignStart="@+id/button23"
+				android:layout_below="@+id/button24"
+				android:layout_marginTop="20dp"
+				android:text="250 PESOS" />
+
+			<Button
+				android:id="@+id/button28"
+				android:layout_width="130dp"
+				android:layout_height="50dp"
+				android:layout_alignBaseline="@+id/button25"
+				android:layout_alignBottom="@+id/button25"
+				android:layout_alignStart="@+id/button24"
+				android:text="500 PESOS" />
+
+			<Button
+				android:id="@+id/button24"
+				android:layout_width="130dp"
+				android:layout_height="50dp"
+				android:layout_alignBaseline="@+id/button23"
+				android:layout_alignBottom="@+id/button23"
+				android:layout_marginStart="17dp"
+				android:layout_toEndOf="@+id/button23"
+				android:text="100 PESOS" />
+
+			<TextView
+				android:id="@+id/textView4"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/button28"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="17dp"
+				android:fontFamily="@font/roboto_thin"
+				android:text="Or enter a custom amount to donate"
+				android:textColor="@color/black"
+				android:textSize="20sp" />
+
+			<EditText
+				android:id="@+id/editText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/textView4"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="13dp"
+				android:ems="10"
+				android:fontFamily="sans-serif-condensed"
+				android:inputType="textPersonName"
+				android:text="custom amount"
+				android:textAlignment="center"
+				android:textColor="@color/black" />
+
+
+
+			<ImageButton
+				android:id="@+id/imageButton4"
+				android:layout_width="200dp"
+				android:layout_height="150dp"
+				android:layout_alignStart="@+id/imageView4"
+				android:layout_alignTop="@+id/editText"
+				android:layout_marginTop="33dp"
+				android:background="@android:color/transparent"
+				app:srcCompat="@drawable/paypal" />
+
+
+		</RelativeLayout>
+
+</LinearLayout>
