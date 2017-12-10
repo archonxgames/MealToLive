@@ -321,7 +321,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 	{
 		_signupButton.setEnabled(true);
 		// Sign in success, update UI with the signed-in user's information
-		FirebaseUser user = mAuth.getCurrentUser();
+		final FirebaseUser user = mAuth.getCurrentUser();
 
 		UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 				.setDisplayName(displayName)
@@ -341,10 +341,12 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 							{
 								//TODO: Add Notification about Email Verification
 								//TODO: Also test out wether this shit actually work yes Frend.
+								Toast.makeText(SignupPersonalActivity.this, "A Verification Email was sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
 							}
 							else
 							{
 								//TODO: Do something about email that is not reachable or valid.
+								Toast.makeText(SignupPersonalActivity.this, "Failed to Email Verification to " + user.getEmail(), Toast.LENGTH_SHORT).show();
 							}
 						}
 					});
