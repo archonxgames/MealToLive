@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity
 		super.onStart();
 		// Check if user is signed in (non-null) and update UI accordingly.
 		FirebaseUser currentUser = mAuth.getCurrentUser();
-		if (currentUser != null)
+		boolean userVerified = currentUser.isEmailVerified();
+		if (currentUser != null && userVerified == true)
 			updateUI(currentUser);
 		else
 		{

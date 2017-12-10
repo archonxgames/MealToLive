@@ -293,14 +293,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 						@Override
 						public void onComplete(@NonNull Task<AuthResult> task)
 						{
+							//Sign-in was succesful.
 							if (task.isSuccessful())
 							{
 								FirebaseUser theUser = mAuth.getCurrentUser();
-								if(theUser.isEmailVerified() == true)
+								//It only logs in if the user is Email Verified
+								if(theUser.isEmailVerified())
 								{
 									onLoginSuccess();
 								}
+								//Send Verification Email if the user non-verified
+								else
+								{
+									theUser.sendEmailVerification();
+									onLoginFailed();
+									mAuth.signOut();
+								}
 							}
+							//If initial sign-in was unsuccesful
 							else
 							{
 								onLoginFailed();

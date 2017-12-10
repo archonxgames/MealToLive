@@ -332,24 +332,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		if (user != null)
 		{
 			user.updateProfile(profileUpdates);
-			//Send Email Verifcation Yes!
-			user.sendEmailVerification()
-					.addOnCompleteListener(this, new OnCompleteListener<Void>() {
-						@Override
-						public void onComplete(@NonNull Task<Void> task) {
-							if(task.isSuccessful())
-							{
-								//TODO: Add Notification about Email Verification
-								//TODO: Also test out wether this shit actually work yes Frend.
-								Toast.makeText(SignupPersonalActivity.this, "A Verification Email was sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
-							}
-							else
-							{
-								//TODO: Do something about email that is not reachable or valid.
-								Toast.makeText(SignupPersonalActivity.this, "Failed to Email Verification to " + user.getEmail(), Toast.LENGTH_SHORT).show();
-							}
-						}
-					});
 		}
 		setResult(RESULT_OK, null);
 		finish();
