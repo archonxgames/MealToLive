@@ -28,6 +28,17 @@ public class SignupNavActivity extends AppCompatActivity
 				startActivityForResult(intent, REQUEST_SIGNUP);
 			}
 		});
+
+		Button _organizationSignupButton = findViewById(R.id.o_nav_signup_button);
+		_organizationSignupButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view)
+			{
+				Intent intent = new Intent(getApplicationContext(), SignupOrganizationActivity.class);
+				startActivityForResult(intent, REQUEST_SIGNUP);
+			}
+		});
 	}
 
 	@Override

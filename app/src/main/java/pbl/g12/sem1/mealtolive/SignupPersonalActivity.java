@@ -57,7 +57,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 	 * Id to identity READ_CONTACTS permission request.
 	 */
 	private static final int REQUEST_READ_CONTACTS = 0;
-	private static final int RESULT_NEEDS_VERIFY = 2;
 	private FirebaseAuth mAuth;
 	private DatabaseReference mDatabase;
 
@@ -73,7 +72,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_signup_personal);
 		setupActionBar();
-		// Set up the login form.
+		// Set up the signup form.
 		mNameView = findViewById(R.id.p_signup_input_name);
 		mNameView.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
@@ -214,7 +213,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 	}
 
 	/**
-	 * Attempts to sign in or register the account specified by the login form.
+	 * Attempts to sign in or register the personal account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
@@ -293,7 +292,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 						{
 							if (task.isSuccessful())
 							{
-								onSignUpSuccess();
+								onSignUpSuccess(displayName);
 							}
 							else
 							{
@@ -316,7 +315,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		_signupButton.setEnabled(true);
 	}
 
-	private void onSignUpSuccess()
+	private void onSignUpSuccess(String displayName)
 	{
 		_signupButton.setEnabled(true);
 		// Sign in success, update database with the signed-in user's information
@@ -327,18 +326,18 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 
 			//Fill in database values
 			UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-					.setDisplayName(user.getDisplayName())
+					.setDisplayName(displayName)
 					.build();
 
-			mDatabase.child("Users").child(userUid).child("AccountType").setValue("Personal");
-			mDatabase.child("Users").child(userUid).child("ContactNo").setValue("none");
-			mDatabase.child("Users").child(userUid).child("Name").setValue(user.getDisplayName());
-			mDatabase.child("Users").child(userUid).child("Email").setValue(user.getEmail());
+			mDatabase.child("Users").child("Personal").child(userUid).child("Email").setValue(user.getEmail());
+			mDatabase.child("Users").child("Personal").child(userUid).child("Birthdate").setValue("not set");
+			mDatabase.child("Users").child("Personal").child(userUid).child("Gender").setValue("not set");
+			mDatabase.child("Users").child("Personal").child(userUid).child("ContactNo").setValue("not set");
 
 			user.updateProfile(profileUpdates);
 			user.sendEmailVerification();
 		}
-		setResult(RESULT_NEEDS_VERIFY, null);
+		setResult(RESULT_OK, null);
 		finish();
 	}
 

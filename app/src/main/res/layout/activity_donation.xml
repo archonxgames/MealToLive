@@ -15,7 +15,7 @@
 			android:id = "@+id/nav_toolbar"
 			android:layout_width = "match_parent"
 			android:layout_height = "?attr/actionBarSize"
-			android:background = "?attr/colorPrimary"
+			android:background = "@color/primary"
 			android:theme = "@style/ThemeOverlay.AppCompat.ActionBar"
 			app:popupTheme = "@style/AppTheme.Dark.PopupOverlay"
 			app:title = "@string/title_activity_donation" />

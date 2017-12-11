@@ -366,10 +366,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 								}
 								if (!userUidExists)
 								{
-									mDatabase.child("Users").child(userUid).child("AccountType").setValue("Personal");
-									mDatabase.child("Users").child(userUid).child("ContactNo").setValue("none");
-									mDatabase.child("Users").child(userUid).child("Name").setValue(user.getDisplayName());
-									mDatabase.child("Users").child(userUid).child("Email").setValue(user.getEmail());
+									mDatabase.child("Users").child("Personal").child(userUid).child("Email").setValue(user.getEmail());
+									mDatabase.child("Users").child("Personal").child(userUid).child("Birthdate").setValue("not set");
+									mDatabase.child("Users").child("Personal").child(userUid).child("Gender").setValue("not set");
+									mDatabase.child("Users").child("Personal").child(userUid).child("ContactNo").setValue("not set");
 								}
 							}
 
