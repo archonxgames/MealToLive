@@ -10,7 +10,7 @@
 
 	<!-- Display Name Label -->
 	<android.support.design.widget.TextInputLayout
-		android:id = "@+id/textInputLayout3"
+		android:id = "@+id/textInputLayout7"
 		android:layout_width = "match_parent"
 		android:layout_height = "wrap_content"
 		android:layout_marginEnd = "8dp"
@@ -40,7 +40,7 @@
 		android:layout_marginTop = "8dp"
 		app:layout_constraintEnd_toEndOf = "parent"
 		app:layout_constraintStart_toStartOf = "parent"
-		app:layout_constraintTop_toBottomOf = "@+id/textInputLayout3">
+		app:layout_constraintTop_toBottomOf = "@+id/textInputLayout7">
 
 		<AutoCompleteTextView
 			android:id = "@+id/p_signup_input_email"

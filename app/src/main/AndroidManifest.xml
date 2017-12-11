@@ -1,65 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android = "http://schemas.android.com/apk/res/android"
-	package = "pbl.g12.sem1.mealtolive">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="pbl.g12.sem1.mealtolive">
 
-	<!-- To auto-complete the email text field in the login form with the user's emails -->
-	<uses-permission android:name = "android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name = "android.permission.READ_PROFILE" />
-	<uses-permission android:name = "android.permission.READ_CONTACTS" />
-	<uses-permission android:name = "android.permission.INTERNET" />
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-	<application
-		android:allowBackup = "true"
-		android:icon = "@mipmap/ic_launcher"
-		android:label = "@string/app_name"
-		android:roundIcon = "@mipmap/ic_launcher_round"
-		android:supportsRtl = "true"
-		android:theme = "@style/AppTheme.Dark">
-		<activity
-			android:name = ".MainActivity"
-			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark">
-			<intent-filter>
-				<action android:name = "android.intent.action.MAIN" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.Dark">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-				<category android:name = "android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name = ".LoginActivity"
-			android:label = "@string/title_activity_login"
-			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark" />
-		<activity
-			android:name = ".UserProfileActivity"
-			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark" />
-		<activity
-			android:name = ".SignupNavActivity"
-			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark">
-			<meta-data
-				android:name = "android.support.PARENT_ACTIVITY"
-				android:value = "pbl.g12.sem1.mealtolive.LoginActivity" />
-		</activity>
-		<activity
-			android:name = ".SignupPersonalActivity"
-			android:label = "@string/title_activity_signup_personal"
-			android:parentActivityName = ".SignupNavActivity"
-			android:theme = "@style/AppTheme.Dark">
-			<meta-data
-				android:name = "android.support.PARENT_ACTIVITY"
-				android:value = "pbl.g12.sem1.mealtolive.SignupNavActivity" />
-		</activity>
-		<activity
-			android:name = ".DonationActivity"
-			android:label = "@string/title_activity_donation"
-			android:parentActivityName = ".MainActivity"
-			android:theme = "@style/AppTheme.Dark">
-			<meta-data
-				android:name = "android.support.PARENT_ACTIVITY"
-				android:value = "pbl.g12.sem1.mealtolive.MainActivity" />
-		</activity>
-	</application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".SignupNavActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pbl.g12.sem1.mealtolive.LoginActivity" />
+        </activity>
+        <activity
+            android:name=".SignupPersonalActivity"
+            android:label="@string/title_activity_signup_personal"
+            android:parentActivityName=".SignupNavActivity"
+            android:theme="@style/AppTheme.Dark">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pbl.g12.sem1.mealtolive.SignupNavActivity" />
+        </activity>
+        <activity
+            android:name=".DonationActivity"
+            android:label="@string/title_activity_donation"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.Dark">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pbl.g12.sem1.mealtolive.MainActivity" />
+        </activity>
+        <activity android:name=".SignupOrganizationActivity"></activity>
+    </application>
 
 </manifest>
