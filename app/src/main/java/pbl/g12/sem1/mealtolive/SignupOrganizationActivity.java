@@ -112,7 +112,7 @@ public class SignupOrganizationActivity extends AppCompatActivity {
         else
         {
             //[START init_progress_dialog]
-            final ProgressDialog progressDialog = new ProgressDialog(SignupPersonalActivity.this,
+            final ProgressDialog progressDialog = new ProgressDialog(SignupOrganizationActivity.this,
                     R.style.AppTheme_Dark_Dialog);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Creating Account...");
@@ -126,11 +126,11 @@ public class SignupOrganizationActivity extends AppCompatActivity {
                         {
                             if (task.isSuccessful())
                             {
-                                onSignUpSuccess(displayName);
+                                //onSignUpSuccess(displayName);
                             }
                             else
                             {
-                                onSignUpFailed();
+                                //onSignUpFailed();
                             }
 
                             // [START_EXCLUDE]
