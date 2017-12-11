@@ -377,7 +377,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			{
 				switch (e.getMessage())
 				{
+					//Tapping out of the Google Intent
 					case "12501: ":
+						break;
+					//No internet connection
+					case "7: ":
+						Toast.makeText(getBaseContext(), "Failed to connect. Check your internet connection.", Toast.LENGTH_LONG).show();
 						break;
 					default:
 						Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();

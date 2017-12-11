@@ -326,9 +326,9 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 				.setDisplayName(displayName)
 				.build();
 		final String userID = user.getUid();
+		//Fill in database values
 		mDatabase.child("Users").child(userID).child("Display Name").setValue(displayName);
 		mDatabase.child("Users").child(userID).child("Username").setValue(displayName);
-		mDatabase.child("Users").child(userID).child("AccountType").setValue("Personal");
 		if (user != null)
 		{
 			user.updateProfile(profileUpdates);
