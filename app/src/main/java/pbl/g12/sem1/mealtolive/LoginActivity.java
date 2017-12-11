@@ -58,7 +58,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 	 * Id to identity READ_CONTACTS permission request.
 	 */
 	private static final int REQUEST_READ_CONTACTS = 0;
-	private static final int RC_LOGIN = 1;
+	/**
+	 * Id to identity REQUEST_LOGIN intent result code.
+	 */
+	private static final int REQUEST_LOGIN = 1;
+	/**
+	 * Id to identity REQUEST_SIGNUP intent request code.
+	 */
 	private static final int REQUEST_SIGNUP = 2;
 
 	/**
@@ -127,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			public void onClick(View view)
 			{
 				Intent signInIntent = googleSignInClient.getSignInIntent();
-				startActivityForResult(signInIntent, RC_LOGIN);
+				startActivityForResult(signInIntent, REQUEST_LOGIN);
 			}
 		});
 		//[END Init_google_login_button]
@@ -223,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 	private void onLoginSuccess()
 	{
-		setResult(RC_LOGIN, getIntent());
+		setResult(REQUEST_LOGIN, getIntent());
 		finish();
 	}
 
@@ -293,30 +299,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 						@Override
 						public void onComplete(@NonNull Task<AuthResult> task)
 						{
-							//Sign-in was succesful.
+							//Sign-in was successful.
 							if (task.isSuccessful())
 							{
-								FirebaseUser theUser = mAuth.getCurrentUser();
+								FirebaseUser user = mAuth.getCurrentUser();
 								//It only logs in if the user is Email Verified
-								if(theUser.isEmailVerified())
+								if (user.isEmailVerified())
 								{
 									onLoginSuccess();
 								}
 								//Send Verification Email if the user non-verified
 								else
 								{
-									theUser.sendEmailVerification();
+									Toast.makeText(getBaseContext(), "Account not verified. Please verify your account before logging in.", Toast.LENGTH_LONG).show();
+									user.sendEmailVerification();
 									onLoginFailed();
 									mAuth.signOut();
 								}
 							}
-							//If initial sign-in was unsuccesful
+							//If initial sign-in was unsuccessful
 							else
 							{
 								onLoginFailed();
 							}
 						}
 					});
+			progressDialog.dismiss();
 		}
 	}
 
@@ -331,7 +339,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 					{
 						if (task.isSuccessful())
 						{
-							onLoginSuccess();
+							FirebaseUser user = mAuth.getCurrentUser();
+							//It only logs in if the user is Email Verified
+							if (user.isEmailVerified())
+							{
+								onLoginSuccess();
+							}
+							//Send Verification Email if the user non-verified
+							else
+							{
+
+								user.sendEmailVerification();
+								onLoginFailed();
+								mAuth.signOut();
+							}
 						}
 					}
 				});
@@ -343,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-		if (requestCode == RC_LOGIN)
+		if (requestCode == REQUEST_LOGIN)
 		{
 			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 			try
@@ -362,6 +383,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 						Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 			}
+		}
+
+		if (requestCode == REQUEST_SIGNUP)
+		{
+			Toast.makeText(getBaseContext(), "Please verify your account before logging in.", Toast.LENGTH_LONG).show();
 		}
 	}
 

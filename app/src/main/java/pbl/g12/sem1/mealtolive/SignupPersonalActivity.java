@@ -49,13 +49,18 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class SignupPersonalActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>
 {
+	/**
+	 * Id to identity RC_LOGIN intent request code.
+	 */
 	private static final int RC_LOGIN = 1;
 	/**
 	 * Id to identity READ_CONTACTS permission request.
 	 */
 	private static final int REQUEST_READ_CONTACTS = 0;
+	private static final int RESULT_NEEDS_VERIFY = 2;
 	private FirebaseAuth mAuth;
 	private DatabaseReference mDatabase;
+
 	// UI references.
 	private AutoCompleteTextView mNameView;
 	private AutoCompleteTextView mEmailView;
@@ -256,12 +261,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 			focusView = mEmailView;
 			cancel = true;
 		}
-		else if (!isEmailDomainExisting(email))
-		{
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
 
 		//Check for a valid display name
 		if (displayName.isEmpty())
@@ -327,26 +326,21 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 				.setDisplayName(displayName)
 				.build();
 		final String userID = user.getUid();
+		mDatabase.child("Users").child(userID).child("Display Name").setValue(displayName);
 		mDatabase.child("Users").child(userID).child("Username").setValue(displayName);
-		mDatabase.child("Users").child(userID).child("AccountType").setValue("Null");
+		mDatabase.child("Users").child(userID).child("AccountType").setValue("Personal");
 		if (user != null)
 		{
 			user.updateProfile(profileUpdates);
+			user.sendEmailVerification();
 		}
-		setResult(RESULT_OK, null);
+		setResult(RESULT_NEEDS_VERIFY, null);
 		finish();
 	}
 
 	private boolean isEmailFormatValid(String email)
 	{
 		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-	}
-
-	private boolean isEmailDomainExisting(String email)
-	{
-		String domain = email.split("@")[1];
-		//TODO: Insert domain check
-		return true;
 	}
 
 	private boolean isPasswordValid(String password)
@@ -392,7 +386,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 	@Override
 	public void onLoaderReset(Loader<Cursor> cursorLoader)
 	{
-
 	}
 
 	private void addEmailsToAutoComplete(List<String> emailAddressCollection)
@@ -414,7 +407,6 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 
 		mNameView.setAdapter(adapter);
 	}
-
 
 	private interface ProfileQuery
 	{

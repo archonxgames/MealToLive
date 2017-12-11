@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools = "http://schemas.android.com/tools">
 	<string name = "app_name">Meal To Live</string>
 
 	<!-- Strings related to login -->
@@ -38,4 +38,5 @@
 	<string name = "title_activity_signup_organization">Organization Account</string>
 	<string name = "navDrawer.nav_home.title">Home</string>
 	<string name = "navDrawer.nav_donate.title">Donate</string>
+	<string name = "title_activity_donation">Donate</string>
 </resources>

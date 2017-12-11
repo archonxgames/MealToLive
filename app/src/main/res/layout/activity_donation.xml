@@ -4,7 +4,7 @@
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
-	tools:context = "pbl.g12.sem1.mealtolive.SignupPersonalActivity">
+	tools:context = "pbl.g12.sem1.mealtolive.DonationActivity">
 
 	<android.support.design.widget.AppBarLayout
 		android:layout_width = "match_parent"
@@ -12,16 +12,14 @@
 		android:theme = "@style/AppTheme.Dark.AppBarOverlay">
 
 		<android.support.v7.widget.Toolbar
-			android:id = "@+id/nav_toolbar"
+			android:id = "@+id/toolbar"
 			android:layout_width = "match_parent"
 			android:layout_height = "?attr/actionBarSize"
 			android:background = "?attr/colorPrimary"
-			android:theme = "@style/ThemeOverlay.AppCompat.ActionBar"
-			app:popupTheme = "@style/AppTheme.Dark.PopupOverlay"
-			app:title = "@string/title_activity_signup_personal" />
+			app:popupTheme = "@style/AppTheme.Dark.PopupOverlay" />
 
 	</android.support.design.widget.AppBarLayout>
 
-	<include layout = "@layout/content_signup_personal" />
+	<include layout = "@layout/content_donation" />
 
 </android.support.design.widget.CoordinatorLayout>

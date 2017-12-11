@@ -20,7 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener
 {
-	private static final int RC_LOGIN = 1;
+	private static final int REQUEST_LOGIN = 1;
+	private static final int REQUEST_DONATE = 2;
 	private FirebaseAuth mAuth;
 
 	@Override
@@ -50,19 +51,19 @@ public class MainActivity extends AppCompatActivity
 		super.onStart();
 		// Check if user is signed in (non-null) and update UI accordingly.
 		FirebaseUser currentUser = mAuth.getCurrentUser();
-		boolean userVerified = currentUser.isEmailVerified();
-		if (currentUser != null && userVerified == true)
-			updateUI(currentUser);
+		if (currentUser != null)
+			if (currentUser.isEmailVerified())
+				updateUI(currentUser);
+			else
+				onSignOut();
 		else
-		{
 			onSignOut();
-		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		if (requestCode == RC_LOGIN)
+		if (requestCode == REQUEST_LOGIN)
 		{
 			if (resultCode == RESULT_OK)
 			{
@@ -124,7 +125,8 @@ public class MainActivity extends AppCompatActivity
 		}
 		else if (id == R.id.nav_donate)
 		{
-
+			Intent intent = new Intent(getApplicationContext(), DonationActivity.class);
+			startActivityForResult(intent, REQUEST_DONATE);
 		}
 		else if (id == R.id.nav_slideshow)
 		{
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity
 	private void onSignOut()
 	{
 		Intent intent = new Intent(this, LoginActivity.class);
-		startActivityForResult(intent, RC_LOGIN);
+		startActivityForResult(intent, REQUEST_LOGIN);
 	}
 
 	private void updateUI(FirebaseUser user)

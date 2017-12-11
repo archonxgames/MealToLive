@@ -14,13 +14,14 @@
 		android:label = "@string/app_name"
 		android:roundIcon = "@mipmap/ic_launcher_round"
 		android:supportsRtl = "true"
-		android:theme = "@style/AppTheme">
+		android:theme = "@style/AppTheme.Dark">
 		<activity
 			android:name = ".MainActivity"
 			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.NoActionBar">
+			android:theme = "@style/AppTheme.Dark">
 			<intent-filter>
 				<action android:name = "android.intent.action.MAIN" />
+
 				<category android:name = "android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
@@ -29,28 +30,35 @@
 			android:label = "@string/title_activity_login"
 			android:screenOrientation = "portrait"
 			android:theme = "@style/AppTheme.Dark" />
-
 		<activity
 			android:name = ".UserProfileActivity"
 			android:screenOrientation = "portrait"
 			android:theme = "@style/AppTheme.Dark" />
 		<activity
-			android:name = ".UserDonationActivity"
-			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark" />
-		<activity
 			android:name = ".SignupNavActivity"
 			android:screenOrientation = "portrait"
-			android:theme = "@style/AppTheme.Dark" />
+			android:theme = "@style/AppTheme.Dark">
+			<meta-data
+				android:name = "android.support.PARENT_ACTIVITY"
+				android:value = "pbl.g12.sem1.mealtolive.LoginActivity" />
+		</activity>
 		<activity
 			android:name = ".SignupPersonalActivity"
 			android:label = "@string/title_activity_signup_personal"
 			android:parentActivityName = ".SignupNavActivity"
 			android:theme = "@style/AppTheme.Dark">
-
 			<meta-data
 				android:name = "android.support.PARENT_ACTIVITY"
 				android:value = "pbl.g12.sem1.mealtolive.SignupNavActivity" />
+		</activity>
+		<activity
+			android:name = ".DonationActivity"
+			android:label = "@string/title_activity_donation"
+			android:parentActivityName = ".MainActivity"
+			android:theme = "@style/AppTheme.Dark">
+			<meta-data
+				android:name = "android.support.PARENT_ACTIVITY"
+				android:value = "pbl.g12.sem1.mealtolive.MainActivity" />
 		</activity>
 	</application>
 
