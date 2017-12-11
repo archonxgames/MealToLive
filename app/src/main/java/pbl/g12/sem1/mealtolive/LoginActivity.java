@@ -43,6 +43,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -331,6 +337,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 	private void attemptGoogleLogin(GoogleSignInAccount acct)
 	{
 		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+		final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 		mAuth.signInWithCredential(credential)
 				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
 				{
@@ -339,20 +346,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 					{
 						if (task.isSuccessful())
 						{
-							FirebaseUser user = mAuth.getCurrentUser();
-							//It only logs in if the user is Email Verified
-							if (user.isEmailVerified())
-							{
-								onLoginSuccess();
-							}
-							//Send Verification Email if the user non-verified
-							else
-							{
+							final FirebaseUser user = mAuth.getCurrentUser();
+							final String userUid = user.getUid();
 
-								user.sendEmailVerification();
-								onLoginFailed();
-								mAuth.signOut();
+							//register user to database if not registered
+							mDatabase.child("Users").equalTo(userUid).addListenerForSingleValueEvent(new ValueEventListener()
+							{
+								@Override
+								public void onDataChange(DataSnapshot dataSnapshot)
+							{
+								boolean userUidExists = false;
+								for (DataSnapshot snapshot : dataSnapshot.getChildren())
+								{
+									if (snapshot.exists())
+									{
+										userUidExists = true;
+										break;
+									}
+								}
+								if (!userUidExists)
+								{
+									mDatabase.child("Users").child(userUid).child("AccountType").setValue("Personal");
+									mDatabase.child("Users").child(userUid).child("ContactNo").setValue("none");
+									mDatabase.child("Users").child(userUid).child("Name").setValue(user.getDisplayName());
+									mDatabase.child("Users").child(userUid).child("Email").setValue(user.getEmail());
+								}
 							}
+
+								@Override
+								public void onCancelled(DatabaseError databaseError)
+								{
+
+								}
+							});
+							onLoginSuccess();
 						}
 					}
 				});

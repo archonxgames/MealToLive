@@ -37,9 +37,14 @@
 	<string name = "title_activity_signup_personal">Personal Account</string>
 	<string name = "title_activity_signup_organization">Organization Account</string>
 	<string name = "title_activity_donation">Donate</string>
-	<string name = "navDrawer.nav_home.title">Home</string>
+
+	<string name = "navDrawer.nav_news.title">Home</string>
 	<string name = "navDrawer.nav_donate.title">Donate</string>
+	<string name = "navDrawer.nav_events.title">Events</string>
+
 	<string name="prompt_organization_name">Organization Name</string>
 	<string name="prompt_address">Business Address</string>
 	<string name="prompt_contact_number">Contact Number</string>
+	<string name = "title_activity_signup_nav">Sign up</string>
+
 </resources>

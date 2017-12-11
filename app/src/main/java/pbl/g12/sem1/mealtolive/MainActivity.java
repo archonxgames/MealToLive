@@ -1,5 +1,7 @@
 package pbl.g12.sem1.mealtolive;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity
 		mAuth = FirebaseAuth.getInstance();
 
 		setContentView(R.layout.activity_nav_drawer);
-		Toolbar toolbar = findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.nav_toolbar);
 		setSupportActionBar(toolbar);
 
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 
-		if (id == R.id.nav_home)
+		if (id == R.id.nav_news)
 		{
 			// Handle the camera action
 		}
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity
 			Intent intent = new Intent(getApplicationContext(), DonationActivity.class);
 			startActivityForResult(intent, REQUEST_DONATE);
 		}
-		else if (id == R.id.nav_slideshow)
+		else if (id == R.id.nav_events)
 		{
 
 		}
@@ -142,8 +144,28 @@ public class MainActivity extends AppCompatActivity
 		}
 		else if (id == R.id.nav_logout)
 		{
-			mAuth.signOut();
-			onSignOut();
+			AlertDialog.Builder confirmAlert = new AlertDialog.Builder(MainActivity.this);
+			confirmAlert.setMessage("Are you sure you want to logout?");
+			confirmAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i)
+				{
+					mAuth.signOut();
+					onSignOut();
+				}
+			});
+
+			confirmAlert.setNegativeButton("No", new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					dialog.dismiss();
+				}
+			});
+
+			confirmAlert.show();
 		}
 
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);

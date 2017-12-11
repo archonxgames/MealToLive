@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app = "http://schemas.android.com/apk/res-auto"
 	xmlns:tools = "http://schemas.android.com/tools"
 	android:layout_width = "match_parent"
 	android:layout_height = "match_parent"
-	android:orientation = "vertical"
-	android:weightSum = "100"
 	tools:context = "pbl.g12.sem1.mealtolive.SignupNavActivity">
 
-	<android.support.v7.widget.AppCompatButton
-		android:id = "@+id/p_nav_signup_button"
+	<android.support.design.widget.AppBarLayout
 		android:layout_width = "match_parent"
-		android:layout_height = "0dp"
-		android:layout_weight = "50"
-		android:drawablePadding = "-40dp"
-		android:drawableTop = "@drawable/personal"
-		android:fontFamily = "sans-serif"
-		android:padding = "12dp"
-		android:text = "@string/title_activity_signup_personal"
-		android:textSize = "18sp" />
+		android:layout_height = "wrap_content"
+		android:theme = "@style/AppTheme.Dark.AppBarOverlay">
 
-	<android.support.v7.widget.AppCompatButton
-		android:id = "@+id/o_nav_signup_button"
-		android:layout_width = "match_parent"
-		android:layout_height = "0dp"
-		android:layout_weight = "50"
-		android:drawablePadding = "-40dp"
-		android:drawableTop = "@drawable/organization"
-		android:fontFamily = "sans-serif"
-		android:padding = "12dp"
-		android:text = "@string/title_activity_signup_organization"
-		android:textSize = "18sp" />
-</LinearLayout>
+		<android.support.v7.widget.Toolbar
+			android:id = "@+id/nav_toolbar"
+			android:layout_width = "match_parent"
+			android:layout_height = "?attr/actionBarSize"
+			android:background = "?attr/colorPrimary"
+			android:theme = "@style/ThemeOverlay.AppCompat.ActionBar"
+			app:popupTheme = "@style/AppTheme.Dark.PopupOverlay"
+			app:title = "@string/title_activity_signup_nav" />
+	</android.support.design.widget.AppBarLayout>
+
+	<include layout = "@layout/content_signup_nav" />
+
+</android.support.design.widget.CoordinatorLayout>

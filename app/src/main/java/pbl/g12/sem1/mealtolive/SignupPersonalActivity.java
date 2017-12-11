@@ -293,7 +293,7 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 						{
 							if (task.isSuccessful())
 							{
-								onSignUpSuccess(displayName);
+								onSignUpSuccess();
 							}
 							else
 							{
@@ -316,21 +316,25 @@ public class SignupPersonalActivity extends AppCompatActivity implements LoaderC
 		_signupButton.setEnabled(true);
 	}
 
-	private void onSignUpSuccess(String displayName)
+	private void onSignUpSuccess()
 	{
 		_signupButton.setEnabled(true);
-		// Sign in success, update UI with the signed-in user's information
+		// Sign in success, update database with the signed-in user's information
 		final FirebaseUser user = mAuth.getCurrentUser();
-
-		UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-				.setDisplayName(displayName)
-				.build();
-		final String userID = user.getUid();
-		//Fill in database values
-		mDatabase.child("Users").child(userID).child("Display Name").setValue(displayName);
-		mDatabase.child("Users").child(userID).child("Username").setValue(displayName);
 		if (user != null)
 		{
+			final String userUid = user.getUid();
+
+			//Fill in database values
+			UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+					.setDisplayName(user.getDisplayName())
+					.build();
+
+			mDatabase.child("Users").child(userUid).child("AccountType").setValue("Personal");
+			mDatabase.child("Users").child(userUid).child("ContactNo").setValue("none");
+			mDatabase.child("Users").child(userUid).child("Name").setValue(user.getDisplayName());
+			mDatabase.child("Users").child(userUid).child("Email").setValue(user.getEmail());
+
 			user.updateProfile(profileUpdates);
 			user.sendEmailVerification();
 		}
