@@ -39,4 +39,7 @@
 	<string name = "title_activity_donation">Donate</string>
 	<string name = "navDrawer.nav_home.title">Home</string>
 	<string name = "navDrawer.nav_donate.title">Donate</string>
+	<string name="prompt_organization_name">Organization Name</string>
+	<string name="prompt_address">Business Address</string>
+	<string name="prompt_contact_number">Contact Number</string>
 </resources>
